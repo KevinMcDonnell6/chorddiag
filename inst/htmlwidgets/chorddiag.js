@@ -27,10 +27,10 @@ HTMLWidgets.widget({
 
     // save params for reference from resize method
     chord.params = params;
-
+    // console.log(chord.params)
     var matrix = params.matrix,
         options = params.options;
-
+    // console.log(matrix);
     // get width and height, calculate min for use in diagram size
     var width = el.offsetWidth,
         height = el.offsetHeight,
@@ -125,7 +125,7 @@ HTMLWidgets.widget({
     var fillScale = d3.scale.ordinal()
                             .domain(d3.range(matrix.length))
                             .range(groupColors);
-
+// console.log(groupColors);
     // calculate horizontal and vertical translation values
     var xTranslate = Math.max(width / 2, outerRadius + margin),
         yTranslate = Math.max(height / 2, outerRadius + margin);
@@ -149,10 +149,12 @@ HTMLWidgets.widget({
     // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
+          //.attr("d", d3.svg.arc().innerRadius(innerRadius+50).outerRadius(outerRadius+200))
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
           .on("mouseover", function(d) {
               if (showTooltips) groupTip.show(d);
-              return groupFade(d, fadeLevel);
+              // return groupFade(d, fadeLevel);
+              return chart;
           })
           .on("mouseout", function(d) {
               if (showTooltips) groupTip.hide(d);
@@ -165,6 +167,9 @@ HTMLWidgets.widget({
     } else {
         groups.style("stroke", function(d) { return fillScale(d.index); });
     }
+
+
+
 
     if (showTicks) {
         // create ticks for groups
@@ -200,6 +205,46 @@ HTMLWidgets.widget({
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
              .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
              .text(function(d) { return d.label; });
+
+////////////////////////////////////////////////////////////////////////////////////#/
+///////////////////////////////////////////////////////////////////////////////////
+
+// TICKS 2.0
+// console.log(chord.groups());
+var ticks2 = svg.append("g").attr("class", "ticks")
+               .selectAll("g")
+               .data(chord.groups)
+               .enter().append("g") //.attr("class", "ticks")
+               .attr("id", function(d, i) {
+                   return "ticks-" + groupNames[i];
+               })
+               .selectAll("g")
+               .data(groupTicks2)
+               .enter().append("g").attr("class", "tick")
+               .attr("transform", function(d) {
+                   return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                       + "translate(" + (outerRadius + 30) + ", 0)";
+               });
+
+// add tick marks
+ticks2.append("line")
+     .attr("x1", 1)
+     .attr("y1", 0)
+     .attr("x2", 5)
+     .attr("y2", 0)
+     .style("stroke", "#000");
+
+// add tick labels
+ticks2.append("text")
+     .attr("x", 0)
+     .attr("dy", ".35em")
+     .style("font-size", ticklabelFontsize + "px")
+     .style("font-family", "sans-serif")
+     .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
+     .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
+     .text(function(d) { return d.label+"%"; });
+
+/////////////////////////////////////////////////////////////////////
     }
 
     // create chords
@@ -211,6 +256,9 @@ HTMLWidgets.widget({
                                + "-" + groupNames[d.target.index];
                     })
                     .attr("d", d3.svg.chord().radius(innerRadius));
+    // console.log(chord.chords());
+
+
 
     // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
@@ -247,7 +295,7 @@ HTMLWidgets.widget({
                        })
                        .attr("transform", function(d) {
                            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                                + "translate(" + (outerRadius + d.padding) + ", 0)";
+                                + "translate(" + (outerRadius + 60 + d.padding) + ", 0)";
                        });
         names.append("text")
             .attr("x", 0)
@@ -262,6 +310,172 @@ HTMLWidgets.widget({
             .attr("id", function(d) { return d.label; });
     }
 
+
+//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+dta = chord.groups();
+// console.log(dta[0].startAngle);
+// console.log(dta.length);
+
+dta2 = chord.chords();
+// console.log(dta2);
+
+
+
+var arcs = svg.selectAll("g.arc5")
+    // .data(pie(dataset))
+    // .enter()
+    .append("svg:g")
+    .attr("class", "arc5");
+
+sangles = [];
+eangles= [];
+        var i;
+        for (i = 0; i <dta.length; i++) {
+        sangles[i]=dta[i].startAngle;
+        eangles[i]=dta[i].endAngle;}
+
+
+
+    var pie = d3.layout.pie()
+        // .sortValues(function(a, b) { return a - b; });
+        .startAngle(function(d,i){//console.log(d);
+          return sangles[i]})
+        .endAngle(function(d,i){//console.log(d);
+          return eangles[i]});
+
+var arc4 = d3.svg.arc();
+
+
+
+        // console.log(dataset);
+        var color = d3.scale.category20();
+function getCol(matrix, col){
+       var column = [];
+       for(var i=0; i<matrix.length; i++){
+          column.push(matrix[i][col]);
+       }
+       return column;
+    };
+var test = getCol(matrix, 5);//.sort(function(a, b){return b-a});
+var dict = [];
+// dict[0]=test;
+// dict[1]=getCol(matrix, 6);
+
+
+//console.log(eangles);
+
+var i;
+for (i = 0; i <chord.groups().length; i++) {
+dict[i]=getCol(matrix,i)};
+// console.log(dict);
+
+//     console.log(chord.groups()[i]);;
+// }
+// gs.style("fill", function(d,i) { color(i)});//return fillScale(d); });
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+          var gs = svg.selectAll("ga").data(dict).enter().append("svg:g");
+          // console.log(dict);
+          // console.log(d3.values(dict));
+
+          gs.selectAll("path").data(function (d,i) {//console.log(d,i);
+            return pie(d,i); })
+                  // .attr("startAngle", chord.groups()[5].startAngle)
+                  .enter().append("path")
+                  .attr("fill", function (d, i,j) {//console.log(d,i,j);
+                     return fillScale(i)})// color(i); })
+                  .attr("stroke", "00000")
+                  .style("stroke-width", "0.5px")
+                  .attr("d", function (d, i, j) {
+                    // console.log(d,i,j);
+                      return arc4.innerRadius(outerRadius+30).outerRadius(outerRadius+35)(d);
+                  });
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+
+//  First day 3 reactors
+// var reactor = [[0,2,0],[0,1,1],[0,1,0],[0,1,0],[0,1,0],[0,3,0],[0,0,1],[0,1,0],[1,0,0],[0,0,1],[0,1,0],[1,1,1],[59,80,54],[1,0,0],[3,3,3],[0,0,1],[0,1,0],[0,1,0],[1,1,1],[1,0,0],[0,1,0],[1,1,0],[0,1,0],[0,0,1],[1,2,1],[1,1,0],[0,0,1],[9,12,7],[0,1,0],[1,0,0],[0,1,1],[0,1,0],[1,1,0],[19,28,12],[0,0,1],[0,1,0],[0,0,1],[8,10,10],[0,0,1],[1,2,1],[2,3,1],[8,7,14],[26,28,36],[0,0,1],[9,11,14],[1,1,0],[1,0,0],[3,2,1],[2,3,3],[0,3,0],[0,0,1],[1,1,0],[2,1,2],[4,6,11],[0,0,1],[0,0,1],[1,0,0],[0,1,0],[5,8,4],[0,1,0],[0,2,0],[75,225,111],[1,3,0],[10,18,8],[1,2,3],[0,3,3],[0,1,1],[1,5,2],[2,0,0],[1,1,3],[23,39,14],[0,1,0],[18,19,16],[0,3,2],[1,0,1],[110,222,159],[0,1,0],[6,13,9],[0,2,1],[0,0,2],[6,40,13],[0,1,0],[0,1,2],[3,4,7],[1,0,0],[2,3,3],[3,3,2],[1,1,0],[38,65,50],[0,1,0],[0,1,1],[1,1,1],[2,2,1],[3,4,1],[1,0,0],[7,28,12],[1,5,3],[2,0,3],[2,1,1],[2,1,3],[1,3,0],[1,1,1],[0,1,0],[43,62,38]]
+// ;
+///////////////////////
+
+//  All days all reactors
+// var reactor = [[1,0,0,0,0,0,0,0,0],[11,60,22,6,16,5,6,16,14],[1,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0,0],[46,55,81,17,24,29,37,24,13],[0,4,0,0,0,0,1,0,0],[0,2,1,0,1,1,0,2,0],[0,0,0,0,0,0,0,1,1],[0,1,0,0,0,0,0,0,0],[1,6,3,0,4,0,4,6,2],[1,2,1,0,2,1,0,0,0],[0,0,0,0,0,1,1,0,1],[0,1,2,0,18,0,0,1,0],[1,2,2,0,1,1,0,0,0],[0,1,0,0,0,0,0,0,0],[9,11,9,1,5,2,8,16,1],[4,6,2,0,4,2,4,3,1],[0,0,0,0,0,0,0,1,0],[21,13,17,18,11,28,8,12,1],[2,1,2,1,0,0,1,0,0],[0,2,1,0,0,1,2,0,0],[0,1,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,1,0],[1,0,0,0,0,0,1,0,0],[1,8,4,1,3,0,3,6,2],[3,6,4,1,0,0,1,0,0],[1,0,2,0,0,0,0,0,0],[22,13,6,2,8,2,3,4,3],[1,4,3,0,2,1,1,1,1],[1,1,2,1,1,0,0,1,0],[0,0,0,0,0,0,0,1,0],[16,13,10,3,13,2,13,7,4],[0,0,1,0,0,0,0,0,0],[0,1,1,2,0,2,2,0,0],[3,3,4,1,0,0,1,0,2],[0,0,0,0,1,0,0,0,0],[0,1,1,0,0,0,0,1,0],[0,1,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,0,1,0],[8,9,8,5,1,4,3,0,1],[4,8,3,2,5,2,4,2,1],[3,6,6,1,1,0,2,1,0],[0,0,0,1,1,0,0,0,0],[5,7,8,1,2,5,2,3,0],[0,1,0,0,0,0,0,0,1],[0,1,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0,0],[1,1,0,0,1,1,0,1,0],[0,0,1,0,1,0,0,0,0],[0,0,0,0,1,0,0,0,0],[4,6,2,1,4,2,1,2,3],[86,229,116,18,149,49,43,96,22],[17,40,17,8,14,7,16,16,5],[0,1,0,0,0,0,0,0,0],[0,0,1,0,1,1,1,4,0],[3,0,3,0,2,1,2,4,1],[0,0,0,0,0,1,0,2,0],[0,1,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,1,0],[23,39,14,7,34,3,13,25,5],[0,1,0,0,0,0,0,1,0],[18,19,16,5,9,3,13,7,1],[0,3,2,0,4,0,0,0,0],[1,0,1,0,0,0,0,2,0],[110,222,159,34,115,48,68,73,35],[0,1,0,0,3,1,2,0,1],[6,13,9,3,4,0,2,2,1],[0,2,1,0,1,0,0,1,0],[0,0,2,0,1,0,1,2,0],[0,0,0,0,0,1,0,0,0],[6,40,13,5,27,2,17,5,3],[0,1,0,0,0,0,0,0,0],[0,1,2,0,0,0,0,1,0],[3,4,7,0,4,2,1,2,2],[0,0,0,1,0,0,0,0,0],[1,0,0,0,0,1,0,1,0],[2,3,3,0,0,1,2,1,1],[3,3,2,2,5,5,2,13,1],[1,1,0,0,0,0,0,0,0],[38,65,50,13,30,14,17,16,20],[0,0,0,0,0,1,0,0,0],[0,1,0,0,0,0,1,0,0],[0,0,0,0,0,1,0,3,0],[0,1,1,0,0,0,0,0,0],[1,1,1,0,1,0,1,2,0],[2,2,1,0,0,1,1,0,0],[3,4,1,0,3,2,3,1,1],[1,0,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,1,0],[7,28,12,5,15,15,1,16,0],[1,5,3,1,2,4,1,8,0],[0,0,0,0,1,0,0,0,0],[2,0,3,0,0,12,0,21,2],[2,1,1,0,1,0,1,0,1],[2,1,3,0,2,1,1,0,0],[0,0,0,0,0,0,0,1,0],[1,3,0,0,0,2,1,0,1],[1,1,1,1,1,0,0,0,0],[0,1,0,0,0,0,0,0,0],[43,62,38,14,34,34,22,29,5],[0,0,0,0,1,0,0,1,0]]
+// ;
+// console.log(reactor);
+/*
+//  Values when threshold for "Other" is 1%
+var reactor = [[11,60,22,6,16,5,6,16,14],[46,55,81,17,24,29,37,24,13],[1,6,3,0,4,0,4,6,2],[0,1,2,0,18,0,0,1,0],[9,11,9,1,5,2,8,16,1],[4,6,2,0,4,2,4,3,1],[21,13,17,18,11,28,8,12,1],[1,8,4,1,3,0,3,6,2],[22,13,6,2,8,2,3,4,3],[16,13,10,3,13,2,13,7,4],[23,44,36,8,18,15,16,22,7],[8,9,8,5,1,4,3,0,1],[4,8,3,2,5,2,4,2,1],[5,7,8,1,2,5,2,3,0],[4,6,2,1,4,2,1,2,3],[86,229,116,18,149,49,43,96,22],[17,40,17,8,14,7,16,16,5],[23,39,14,7,34,3,13,25,5],[18,19,16,5,9,3,13,7,1],[110,222,159,34,115,48,68,73,35],[6,13,9,3,4,0,2,2,1],[6,40,13,5,27,2,17,5,3],[3,4,7,0,4,2,1,2,2],[3,3,2,2,5,5,2,13,1],[38,65,50,13,30,14,17,16,20],[18,29,20,2,20,12,14,19,5],[7,28,12,5,15,15,1,16,0],[1,5,3,1,2,4,1,8,0],[2,0,3,0,0,12,0,21,2],[43,62,38,14,34,34,22,29,5]]
+;
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+var Rcolours = ["#FF0000","#0000FF","#008000"]
+var S = 0
+var x = d3.scale.linear()
+    .domain([10, 130])
+    .range([0, 960]);
+console.log(x(20));
+// console.log(scale())
+var pieRad = d3.layout.pie()
+    // .sortValues(function(a, b) { return a - b; });
+    // .startAngle(function(d,i){//console.log(d);
+    //   return sangles[i]})
+    // .endAngle(function(d,i){//console.log(d);
+    //   return eangles[i]});
+
+var arcRad = d3.svg.arc()
+    .innerRadius(function(d,i){return outerRadius +70 + (i*5)})
+    .outerRadius(function(d,i){return outerRadius +73 + (i*5)})
+    .startAngle(function(d,i,j){ return sangles[j]});
+
+
+var Rad = svg.selectAll("ga").data(reactor).enter().append("svg:g");
+// console.log(dict);
+// console.log(d3.values(dict));
+
+Rad.selectAll("path").data(function (d,i) {console.log(d,i); S = d3.sum(reactor[i]);
+   console.log(S);
+  return pieRad(d,i); })
+        // .attr("startAngle", chord.groups()[5].startAngle)
+        .enter().append("path")
+        .attr("fill", function (d, i,j) {//console.log(d,i,j);
+           return Rcolours[i]})// color(i); })
+        .attr("stroke", "00000")
+        .style("stroke-width", "0.5px")
+        .attr("d", function (d, i, j) {
+          var j = j;
+          console.log(d,i,j);
+            return arcRad.endAngle(function(d,i,j){console.log(S);
+              var scale = d3.scale.linear()
+                  .domain([0, d3.sum(reactor[j])])
+                  .range([sangles[j],eangles[j]]);
+              console.log(scale(d.data));
+               return scale(d.data)})(d,i,j);
+        });*/
+//////////////////////////////////////////////////////////
+
+
+var bardata = [4, 8, 15, 16, 23, 42];
+var x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, 420]);
+
+var chart = svg.append("gbar")
+                .selectAll("path")
+                  .data(bardata)
+                .enter().append("div")
+                  .style("width", function(d) { return x(d) + "px"; })
+                  .text(function(d) { return d; });
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
     if (categoryNames) {
         var categories = svg.append("g").attr("class", "categories")
                             .selectAll("g")
@@ -305,6 +519,18 @@ HTMLWidgets.widget({
         return {
           angle: v * k + d.startAngle,
           label: i % 5 ? null : v
+        };
+      });
+    }
+
+    function groupTicks2(d) {
+      // console.log(d);
+      var k = (d.endAngle - d.startAngle); // 100;
+      // return d3.range(0, 101, d.value < 5 ? 101 : (d.value <10 ? 100 : (d.value < 40 ? 50 : (d.value < 80 ? 20 : 10)))).map(function(v,i){
+      return d3.range(0,101, k < 0.05 ? 101 : (k < 0.1 ? 100 : (k < 0.15 ? 50 : ( k < 0.4 ? 20 : 10)))).map(function(v,i){
+        return {
+          angle: v * k/100 + d.startAngle,
+          label:  Math.round(v)
         };
       });
     }
@@ -359,4 +585,3 @@ HTMLWidgets.widget({
   }  // end renderValue function
 
 });
-
