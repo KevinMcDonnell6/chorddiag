@@ -72,6 +72,7 @@
 #'   purpose of filtering the data on other visualizations
 #' @param clickGroupAction character string containing JavaScript code to be executed
 #'   on a mouse click so that shiny can get the groupIndex
+#' @param reactor array of arrays indicating the presence/absence of chord in reactor
 #'
 #'
 #' @source Based on \url{http://bl.ocks.org/mbostock/4062006} with several
@@ -116,7 +117,8 @@ chorddiag <- function(data,
                       tooltipGroupConnector = " &#x25B6; ",
                       precision = NULL,
                       clickAction = NULL,
-                      clickGroupAction = NULL) {
+                      clickGroupAction = NULL,
+                      reactor = NULL) {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
@@ -220,7 +222,8 @@ chorddiag <- function(data,
                                  tooltipGroupConnector = tooltipGroupConnector,
                                  precision = precision,
                                  clickAction = clickAction,
-                                 clickGroupAction = clickGroupAction))
+                                 clickGroupAction = clickGroupAction,
+                                 reactor = reactor))
     params = Filter(Negate(is.null), params)
 
     # create widget

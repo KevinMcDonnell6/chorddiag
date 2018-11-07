@@ -62,7 +62,8 @@ HTMLWidgets.widget({
         tooltipGroupConnector = options.tooltipGroupConnector,
         precision = options.precision,
         clickAction = options.clickAction,
-        clickGroupAction = options.clickGroupAction;
+        clickGroupAction = options.clickGroupAction,
+        reactor = options.reactor;
 
     d3.select(el).selectAll("div.d3-tip").remove();
 
@@ -109,6 +110,8 @@ HTMLWidgets.widget({
                          });
     }
 
+
+
     var svgContainer = d3.select(el).select("svg");
     svgContainer.selectAll("*").remove();
 
@@ -133,10 +136,6 @@ HTMLWidgets.widget({
     var svg = svgContainer.append("g");
     svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")");
 
-    if (showTooltips) {
-       svg.call(chordTip)
-          .call(groupTip);
-    }
 
     // create groups
     var groups = svg.append("g").attr("class", "groups")
@@ -146,18 +145,121 @@ HTMLWidgets.widget({
                            return "group-" + groupNames[i];
                     });
 
+    var div = d3.tip()
+                     .attr('class', 'd3-tip')
+                     .style("font-size", tooltipFontsize + "px")
+                     .style("font-family", "sans-serif")
+                     .direction('mt')
+                     .offset([10, 10])
+                     .html("<h1>Breakdown of Reactors</h1><br> <p1> Blah Blah Blah blah </p1> <div id='tipDiv'></div>");
+                         // .style("left", (d3.event.pageX - 34) + "px")
+                         // .style("top", (d3.event.pageY - 12) + "px");
+
+     if (showTooltips) {
+        svg.call(chordTip)
+           .call(groupTip)
+           .call(div);
+     }
+
+    // var div = d3.tip()//svg.append("g")
+    //     .attr("class", "d3-tip")
+    //     .style("opacity", 1e-6);
+  //
+  // function mouseover() {
+  //   div.style("opacity", 1);
+  // }
+  //
+  // // where the tooltip previosly contained an image
+  // function mousemove() {
+  //   div
+  //    .html("<h1>Bar Graph</h1><br> <svg class='chart'></svg>")
+  //       .style("left", (d3.event.pageX - 34) + "px")
+  //       .style("top", (d3.event.pageY - 12) + "px");
+  // }
+  //
+  // function mouseout() {
+  //   div.style("opacity", 1e-6);
+  // }
+
+console.log(reactor);
+
+  var reactor = [[11,60,22,6,16,5,6,16,14],[46,55,81,17,24,29,37,24,13],[1,6,3,0,4,0,4,6,2],[0,1,2,0,18,0,0,1,0],[9,11,9,1,5,2,8,16,1],[4,6,2,0,4,2,4,3,1],[21,13,17,18,11,28,8,12,1],[1,8,4,1,3,0,3,6,2],[22,13,6,2,8,2,3,4,3],[16,13,10,3,13,2,13,7,4],[23,44,36,8,18,15,16,22,7],[8,9,8,5,1,4,3,0,1],[4,8,3,2,5,2,4,2,1],[5,7,8,1,2,5,2,3,0],[4,6,2,1,4,2,1,2,3],[86,229,116,18,149,49,43,96,22],[17,40,17,8,14,7,16,16,5],[23,39,14,7,34,3,13,25,5],[18,19,16,5,9,3,13,7,1],[110,222,159,34,115,48,68,73,35],[6,13,9,3,4,0,2,2,1],[6,40,13,5,27,2,17,5,3],[3,4,7,0,4,2,1,2,2],[3,3,2,2,5,5,2,13,1],[38,65,50,13,30,14,17,16,20],[18,29,20,2,20,12,14,19,5],[7,28,12,5,15,15,1,16,0],[1,5,3,1,2,4,1,8,0],[2,0,3,0,0,12,0,21,2],[43,62,38,14,34,34,22,29,5]]
+  ;
+
     // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
           //.attr("d", d3.svg.arc().innerRadius(innerRadius+50).outerRadius(outerRadius+200))
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
-          .on("mouseover", function(d) {
-              if (showTooltips) groupTip.show(d);
-              // return groupFade(d, fadeLevel);
-              return chart;
+          .on("mouseover",   function(d) {
+              if (showTooltips) div.show(d);
+              // console.log(d.index);
+
+                  var tipSVG = d3.select("#tipDiv")
+                        .append("svg")
+                        .attr("width", 500)
+                        .attr("height", 120);
+
+                  tipSVG.append("rect")
+                      .attr("fill", "steelblue")
+                      .attr("y", 10)
+                      .attr("width", 0)
+                      .attr("height", 30)
+                      .transition()
+                      .duration(1000)
+                      .attr("width", reactor[d.index][1] * 6);
+
+                  tipSVG.append("rect")
+                      .attr("fill", "green")
+                      .attr("y", 50)
+                      .attr("width", 0)
+                      .attr("height", 30)
+                      .transition()
+                      .duration(1000)
+                      .attr("width", reactor[d.index][2] * 6);
+
+                  tipSVG.append("rect")
+                      .attr("fill", "green")
+                      .attr("y", 90)
+                      .attr("width", 0)
+                      .attr("height", 30)
+                      .transition()
+                      .duration(1000)
+                      .attr("width", reactor[d.index][3] * 6);
+
+
+                  tipSVG.append("text")
+                      .text(reactor[d.index][1])
+                      .attr("x", 10)
+                      .attr("y", 10)
+                      .transition()
+                      .duration(1000)
+                      .attr("x", 6 + reactor[d.index][1] * 6);
+
+                tipSVG.append("text")
+                    .text(reactor[d.index][2])
+                    .attr("x", 10)
+                    .attr("y", 50)
+                    .transition()
+                    .duration(1000)
+                    .attr("x", 6 + reactor[d.index][2] * 6);
+
+
+                tipSVG.append("text")
+                    .text(reactor[d.index][3])
+                    .attr("x", 10)
+                    .attr("y", 90)
+                    .transition()
+                    .duration(1000)
+                    .attr("x", 6 + reactor[d.index][3] * 6);
+
+
+              return groupFade(d, fadeLevel);
+
           })
-          .on("mouseout", function(d) {
-              if (showTooltips) groupTip.hide(d);
+          .on("mouseout",
+           function(d) {
+              if (showTooltips) div.hide(d);
               return groupFade(d, 1);
           })
           .on("click", clickGroup);
@@ -461,18 +563,18 @@ Rad.selectAll("path").data(function (d,i) {console.log(d,i); S = d3.sum(reactor[
         });*/
 //////////////////////////////////////////////////////////
 
-
-var bardata = [4, 8, 15, 16, 23, 42];
-var x = d3.scale.linear()
-    .domain([0, d3.max(data)])
-    .range([0, 420]);
-
-var chart = svg.append("gbar")
-                .selectAll("path")
-                  .data(bardata)
-                .enter().append("div")
-                  .style("width", function(d) { return x(d) + "px"; })
-                  .text(function(d) { return d; });
+//
+// var bardata = [4, 8, 15, 16, 23, 42];
+// var x = d3.scale.linear()
+//     .domain([0, d3.max(data)])
+//     .range([0, 420]);
+//
+// var chart = svg.append("gbar")
+//                 .selectAll("path")
+//                   .data(bardata)
+//                 .enter().append("div")
+//                   .style("width", function(d) { return x(d) + "px"; })
+//                   .text(function(d) { return d; });
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
