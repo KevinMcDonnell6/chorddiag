@@ -110,6 +110,15 @@ HTMLWidgets.widget({
                          });
 
 
+         var Matrixsum = matrix.map(function(y){
+                             return y.reduce(function(a,b){
+                                 return a+b;
+                             });
+                         });
+
+         var Matrixtotal = (d3.sum(Matrixsum) / 2 );
+         console.log(Matrixtotal);
+
          function newchordtip(d) {
              // indexes
              var i = d.source.index,
@@ -117,8 +126,8 @@ HTMLWidgets.widget({
              // values
              var vij = sigFigs(matrix[i][j], precision),
                  vji = sigFigs(matrix[j][i], precision);
-             var dir1 = tooltipNames[i] + "\u25B6" + tooltipNames[j] + ": " + vij + tooltipUnit,
-                 dir2 = tooltipNames[j] + " \u25B6 " + tooltipNames[i] + ": " + vji + tooltipUnit;
+             var dir1 = tooltipNames[i] + " \u25B6 " + tooltipNames[j] + ": " + vij + tooltipUnit,
+                 dir2 = tooltipNames[j] + " \u25B6 " + tooltipNames[i] + ": " + sigFigs((vji /Matrixtotal)*100,2) + "% (" + vij + ")"  + tooltipUnit;
              if (type == "directional") {
                  if (i == j) {
                      return dir1;
@@ -177,12 +186,12 @@ HTMLWidgets.widget({
     d3.select("#tipDiv").remove()
     var div = d3.tip()
                      .attr('class', 'd3-tip')
-                     .style("font-size", tooltipFontsize + "px")
+                     .style("font-size", 20 + "px")
                      .style("font-family", "sans-serif")
                      .direction('mt')
                      .offset([10, 10])
                      .html(function(d){
-                       return( "<div id='tipDiv'></div>")});
+                       return("<p1>" + newchordtip(d) + "</p1> <div id='tipDiv'></div>")});
                          // .style("left", (d3.event.pageX - 34) + "px")
                          // .style("top", (d3.event.pageY - 12) + "px");
 
@@ -362,39 +371,41 @@ ticks2.append("text")
               // console.log(reactor[i]);
               // console.log(newchordtip(d));
 
-
+if(reactor != null){
                   var tipSVG = d3.select("#tipDiv")
                         .append("svg")
-                        .attr("width", 500)
+                        .attr("width", d3.max([100 + d3.max([sigFigs(( reactor[i][0]/561)*100,2)*20, 100 + sigFigs(( reactor[i][1]/1269)*100,2)*20]),300]))//d3.max(reactor[i]) * 5,300]))
                         .attr("height", 110);
 // console.log(tipSVG);
-                  tipSVG.append("text")
-                      .text(newchordtip(d))
-                      .attr("x", 10)
-                      .attr("y", 20)
-                      .style('fill', 'white')
-                      .style("font-size", "20px");
+                  // tipSVG.append("text")
+                  //     .text(newchordtip(d))
+                  //     .attr("x", 10)
+                  //     .attr("y", 20)
+                  //     .style('fill', 'white')
+                  //     .style("font-size", "20px");
 
-// console.log(tipSVG);
+// console.log(d3.max(reactor[i]));
+
+
                   tipSVG.append("rect")
-                      .attr("fill", "steelblue")
+                      .attr("fill", "aqua")
                       .attr("x", 100)
                       .attr("y", 30)
                       .attr("width", 0)
                       .attr("height", 30)
                       .transition()
                       .duration(1000)
-                      .attr("width", reactor[i][0] * 5);
+                      .attr("width", sigFigs(( reactor[i][0]/561)*100,2)*20);//reactor[i][0] * 4);
 
                   tipSVG.append("rect")
-                      .attr("fill", "green")
+                      .attr("fill", "magenta")
                       .attr("x", 100)
                       .attr("y", 70)
                       .attr("width", 0)
                       .attr("height", 30)
                       .transition()
                       .duration(1000)
-                      .attr("width", reactor[i][1] * 5);
+                      .attr("width", sigFigs(( reactor[i][1]/1269)*100,2)*20);//reactor[i][1] * 4);
 
                   // tipSVG.append("rect")
                   //     .attr("fill", "green")
@@ -421,23 +432,23 @@ ticks2.append("text")
                       .style("font-size", "14px");
 
                   tipSVG.append("text")
-                      .text(reactor[i][0])
+                      .text(sigFigs(( reactor[i][0]/561)*100,2) + "%")
                       .attr("x", 120)
                       .attr("y", 50)
                       .style('fill', 'white')
                       .transition()
                       .duration(1000)
-                      .attr("x", 106 + reactor[i][0] * 5);
+                      .attr("x", 106 + sigFigs(( reactor[i][0]/561)*100,2)*20);//reactor[i][0] * 4);
 
                 tipSVG.append("text")
-                    .text(reactor[i][1])
+                    .text(sigFigs(( reactor[i][1]/1269)*100,2) + "%") //reactor[i][1])
                     .attr("x", 120)
                     .attr("y", 90)
                     .style('fill', 'white')
                     .transition()
                     .duration(1000)
-                    .attr("x", 106 + reactor[i][1] * 5);
-
+                    .attr("x", 106 + sigFigs(( reactor[i][1]/1269)*100,2)*20);//reactor[i][1] * 4);
+};
                 //
                 // tipSVG.append("text")
                 //     .text(reactor[d.index][3])
@@ -470,6 +481,19 @@ ticks2.append("text")
           })
           .on("click", click);
 
+
+    // function getCol(matrix, col){
+    //        var column = [];
+    //        for(var i=0; i<matrix.length; i++){
+    //           column.push(matrix[i][col]);
+    //        }
+    //        return column;
+    //         };
+    //
+    //         console.log(d3.sum(matrix));
+
+
+// console.log(groupNames.findIndex(x => x=="Translation"));
     // create group labels
     if (showGroupnames) {
         var names = svg.append("g").attr("class", "names")
@@ -484,7 +508,7 @@ ticks2.append("text")
                        })
                        .selectAll("g")
                        .data(groupLabels)
-                       .enter().append("g").attr("id", function(d) {
+                       .enter().append("g").attr("id", function(d,i) {
                            return "label-" + d.label;
                        })
                        .attr("transform", function(d) {
@@ -500,11 +524,11 @@ ticks2.append("text")
                 return d.handside == "left" ? "rotate(180)" : null;
             })
             .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
-            .text(function(d) { return d.label; })
+            .text(function(d,i) { return d.label }) //+ d3.sum(getCol(matrix,groupNames.findIndex(x => x==d.label))) ; })
             .attr("id", function(d) { return d.label; });
     }
 
-
+console.log(reactor!=null);
 //////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 dta = chord.groups();
