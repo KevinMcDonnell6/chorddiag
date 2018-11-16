@@ -63,7 +63,10 @@ HTMLWidgets.widget({
         precision = options.precision,
         clickAction = options.clickAction,
         clickGroupAction = options.clickGroupAction,
-        reactor = options.reactor;
+        reactor = options.reactor,
+        grouptotals = options.grouptotals;
+
+        console.log(grouptotals);
 
     d3.select(el).selectAll("div.d3-tip").remove();
 
@@ -127,7 +130,7 @@ HTMLWidgets.widget({
              var vij = sigFigs(matrix[i][j], precision),
                  vji = sigFigs(matrix[j][i], precision);
              var dir1 = tooltipNames[i] + " \u25B6 " + tooltipNames[j] + ": " + vij + tooltipUnit,
-                 dir2 = tooltipNames[j] + " \u25B6 " + tooltipNames[i] + ": " + sigFigs((vji /Matrixtotal)*100,2) + "% (" + vij + ")"  + tooltipUnit;
+                 dir2 = tooltipNames[i] + " \u25B6 " + tooltipNames[j] + ": " + sigFigs((vji /d3.sum(getCol(matrix,i)))*100,2) + "% (" + vij + ")"  + tooltipUnit;
              if (type == "directional") {
                  if (i == j) {
                      return dir1;
@@ -374,9 +377,9 @@ ticks2.append("text")
 if(reactor != null){
                   var tipSVG = d3.select("#tipDiv")
                         .append("svg")
-                        .attr("width", d3.max([100 + d3.max([sigFigs(( reactor[i][0]/561)*100,2)*20, 100 + sigFigs(( reactor[i][1]/1269)*100,2)*20]),300]))//d3.max(reactor[i]) * 5,300]))
+                        .attr("width", d3.max([100 + d3.max([sigFigs(( reactor[i][0]/561)*100,2)*20, 100 + sigFigs(( reactor[i][1]/d3.sum(getCol()))*100,2)*20]),300]))//d3.max(reactor[i]) * 5,300]))
                         .attr("height", 110);
-// console.log(tipSVG);
+console.log(d);
                   // tipSVG.append("text")
                   //     .text(newchordtip(d))
                   //     .attr("x", 10)
