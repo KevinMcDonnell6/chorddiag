@@ -73,6 +73,7 @@
 #' @param clickGroupAction character string containing JavaScript code to be executed
 #'   on a mouse click so that shiny can get the groupIndex
 #' @param reactor array of arrays indicating the presence/absence of chord in reactor
+#' @param grouptotals totals of the groups for the individual datasets
 #'
 #'
 #' @source Based on \url{http://bl.ocks.org/mbostock/4062006} with several
@@ -118,7 +119,8 @@ chorddiag <- function(data,
                       precision = NULL,
                       clickAction = NULL,
                       clickGroupAction = NULL,
-                      reactor = NULL) {
+                      reactor = NULL,
+                      grouptotals = NULL) {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
@@ -223,7 +225,8 @@ chorddiag <- function(data,
                                  precision = precision,
                                  clickAction = clickAction,
                                  clickGroupAction = clickGroupAction,
-                                 reactor = reactor))
+                                 reactor = reactor,
+                                 grouptotals = grouptotals))
     params = Filter(Negate(is.null), params)
 
     # create widget
