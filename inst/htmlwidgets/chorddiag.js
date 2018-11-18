@@ -185,7 +185,6 @@ HTMLWidgets.widget({
                     });
 
 
-    var someword = "Blah"
     d3.select("#tipDiv").remove()
     var div = d3.tip()
                      .attr('class', 'd3-tip')
@@ -359,7 +358,9 @@ ticks2.append("text")
     // console.log(chord.chords());
 
 
-
+console.log(grouptotals.NG.length);
+console.log(matrix[0].length);
+var FirstFunIndex = matrix[0].length - grouptotals.NG.length
     // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
           .style("stroke", chordedgeColor)
@@ -377,11 +378,13 @@ ticks2.append("text")
 if(reactor != null){
                   var tipSVG = d3.select("#tipDiv")
                         .append("svg")
-                        .attr("width", d3.max([100 + d3.max([100 + sigFigs(( reactor[i][0]/grouptotals.NG[d.source.index])*100,2)*5, 100 + sigFigs(( reactor[i][1]/grouptotals.NL[d.source.index])*100,2)*5]),300]))//d3.max(reactor[i]) * 5,300]))
+                        .attr("width", d3.max([100 + d3.max([100 + sigFigs(( reactor[i][0]/grouptotals.NG[d.target.index - FirstFunIndex])*100,2)*5, 100 + sigFigs(( reactor[i][1]/grouptotals.NL[d.target.index - FirstFunIndex])*100,2)*5]),300]))//d3.max(reactor[i]) * 5,300]))
                         .attr("height", 110);
-console.log(grouptotals.NG[d.source.index]);
+console.log(d);
+console.log(grouptotals);
+console.log(grouptotals.NG[d.target.index - FirstFunIndex]);
 console.log(reactor[i][0]);
-console.log(reactor[i][0]/grouptotals.NG[d.source.index]);
+console.log(reactor[i][0]/grouptotals.NG[d.target.index - FirstFunIndex]);
                   // tipSVG.append("text")
                   //     .text(newchordtip(d))
                   //     .attr("x", 10)
@@ -400,7 +403,7 @@ console.log(reactor[i][0]/grouptotals.NG[d.source.index]);
                       .attr("height", 30)
                       .transition()
                       .duration(1000)
-                      .attr("width", sigFigs(( reactor[i][0]/grouptotals.NG[d.source.index])*100,2)*5);//reactor[i][0] * 4);
+                      .attr("width", sigFigs(( reactor[i][0]/grouptotals.NG[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][0] * 4);
 
                   tipSVG.append("rect")
                       .attr("fill", "magenta")
@@ -410,7 +413,7 @@ console.log(reactor[i][0]/grouptotals.NG[d.source.index]);
                       .attr("height", 30)
                       .transition()
                       .duration(1000)
-                      .attr("width", sigFigs(( reactor[i][1]/grouptotals.NL[d.source.index])*100,2)*5);//reactor[i][1] * 4);
+                      .attr("width", sigFigs(( reactor[i][1]/grouptotals.NL[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][1] * 4);
 
                   // tipSVG.append("rect")
                   //     .attr("fill", "green")
@@ -437,22 +440,22 @@ console.log(reactor[i][0]/grouptotals.NG[d.source.index]);
                       .style("font-size", "14px");
 
                   tipSVG.append("text")
-                      .text(sigFigs(( reactor[i][0]/grouptotals.NG[d.source.index])*100,2) + "%")
+                      .text(sigFigs(( reactor[i][0]/grouptotals.NG[d.target.index - FirstFunIndex])*100,2) + "%")
                       .attr("x", 120)
                       .attr("y", 50)
                       .style('fill', 'white')
                       .transition()
                       .duration(1000)
-                      .attr("x", 106 + sigFigs(( reactor[i][0]/grouptotals.NG[d.source.index])*100,2)*5);//reactor[i][0] * 4);
+                      .attr("x", 106 + sigFigs(( reactor[i][0]/grouptotals.NG[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][0] * 4);
 
                 tipSVG.append("text")
-                    .text(sigFigs(( reactor[i][1]/grouptotals.NL[d.source.index])*100,2) + "%") //reactor[i][1])
+                    .text(sigFigs(( reactor[i][1]/grouptotals.NL[d.target.index - FirstFunIndex])*100,2) + "%") //reactor[i][1])
                     .attr("x", 120)
                     .attr("y", 90)
                     .style('fill', 'white')
                     .transition()
                     .duration(1000)
-                    .attr("x", 106 + sigFigs(( reactor[i][1]/grouptotals.NL[d.source.index])*100,2)*5);//reactor[i][1] * 4);
+                    .attr("x", 106 + sigFigs(( reactor[i][1]/grouptotals.NL[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][1] * 4);
 };
                 //
                 // tipSVG.append("text")
