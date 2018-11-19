@@ -358,9 +358,8 @@ ticks2.append("text")
     // console.log(chord.chords());
 
 
-console.log(grouptotals.NG.length);
-console.log(matrix[0].length);
-var FirstFunIndex = matrix[0].length - grouptotals.NG.length
+// console.log(grouptotals.NG.length);
+// console.log(matrix[0].length);
     // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
           .style("stroke", chordedgeColor)
@@ -376,6 +375,8 @@ var FirstFunIndex = matrix[0].length - grouptotals.NG.length
               // console.log(newchordtip(d));
 
 if(reactor != null){
+                  var FirstFunIndex = matrix[0].length - grouptotals.NG.length
+
                   var tipSVG = d3.select("#tipDiv")
                         .append("svg")
                         .attr("width", d3.max([100 + d3.max([100 + sigFigs(( reactor[i][0]/grouptotals.NG[d.target.index - FirstFunIndex])*100,2)*5, 100 + sigFigs(( reactor[i][1]/grouptotals.NL[d.target.index - FirstFunIndex])*100,2)*5]),300]))//d3.max(reactor[i]) * 5,300]))
