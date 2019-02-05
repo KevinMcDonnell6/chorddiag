@@ -66,6 +66,7 @@ HTMLWidgets.widget({
         reactor = options.reactor,
         grouptotals = options.grouptotals;
 
+        console.log(reactor);
         console.log(grouptotals);
 
     d3.select(el).selectAll("div.d3-tip").remove();
@@ -360,6 +361,8 @@ ticks2.append("text")
 if(grouptotals != null){
   var Datasetnames = Object.getOwnPropertyNames(grouptotals);
   var FirstFunIndex = matrix[0].length - grouptotals.N.length;
+  console.log(Datasetnames);
+  console.log(FirstFunIndex);
 }
 
 // function getCol(matrix, col){
@@ -478,10 +481,15 @@ var barChart = tipSVG.selectAll("rect")
     // .duration(1000)
     .attr("width", function(d,i) {
         // console.log(d,i);
-        if(maxwidth < (sigFigs((reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*5)){
-          maxwidth = sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*5
+        if(maxwidth < (sigFigs((reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3)){
+          maxwidth = sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3
         }
-        return sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*5;//d;
+        console.log("starts here");
+        console.log(reactor[chordindex][i]);
+        console.log(grouptotals[Datasetnames[i+1]]);
+        console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
+
+        return sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3;//d;
     })
     .attr("transform", function (d, i) {
          var translate = [0,barWidth * i];
@@ -496,7 +504,7 @@ var barChart = tipSVG.selectAll("rect")
           return sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2) + "%";})
         .attr('fill', 'white')
         .attr("x", function(d,i) {
-            return maxTitleWidth + 30 + sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*5;//110 - d
+            return maxTitleWidth + 30 + sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3;//110 - d
         })
         .attr("y", function(d,i){return 40 + i*15})//barWidth - barPadding)
         .attr("transform", function (d, i) {
@@ -507,7 +515,7 @@ var barChart = tipSVG.selectAll("rect")
 
 
 
-tipSVG.attr("width", maxwidth+ maxTitleWidth + 70);
+tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
 // console.log(sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[1]][chordselected.target.index - FirstFunIndex])*100,2) + "%");
 
 
