@@ -122,7 +122,7 @@ chorddiag <- function(data,
                       clickGroupAction = NULL,
                       reactor = NULL,
                       grouptotals = NULL,
-                      firstfunindex = NULL {
+                      firstfunindex = NULL) {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
