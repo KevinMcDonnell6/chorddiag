@@ -74,6 +74,7 @@
 #'   on a mouse click so that shiny can get the groupIndex
 #' @param reactor array of arrays indicating the presence/absence of chord in reactor
 #' @param grouptotals totals of the groups for the individual datasets
+#' @param firstfunidex Index of the first function
 #'
 #'
 #' @source Based on \url{http://bl.ocks.org/mbostock/4062006} with several
@@ -120,7 +121,8 @@ chorddiag <- function(data,
                       clickAction = NULL,
                       clickGroupAction = NULL,
                       reactor = NULL,
-                      grouptotals = NULL) {
+                      grouptotals = NULL,
+                      firstfunindex = NULL {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
@@ -226,7 +228,8 @@ chorddiag <- function(data,
                                  clickAction = clickAction,
                                  clickGroupAction = clickGroupAction,
                                  reactor = reactor,
-                                 grouptotals = grouptotals))
+                                 grouptotals = grouptotals,
+                                 firstfunindex = firstfunindex))
     params = Filter(Negate(is.null), params)
 
     # create widget

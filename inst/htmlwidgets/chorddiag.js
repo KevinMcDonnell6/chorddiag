@@ -64,7 +64,8 @@ HTMLWidgets.widget({
         clickAction = options.clickAction,
         clickGroupAction = options.clickGroupAction,
         reactor = options.reactor,
-        grouptotals = options.grouptotals;
+        grouptotals = options.grouptotals,
+        firstfunindex = options.firstfunindex;
 
         console.log(reactor);
         console.log(grouptotals);
@@ -361,8 +362,8 @@ ticks2.append("text")
 if(grouptotals != null){
   var Datasetnames = Object.getOwnPropertyNames(grouptotals);
   var FirstFunIndex = matrix[0].length - grouptotals.N.length;
-  console.log(Datasetnames);
-  console.log(FirstFunIndex);
+  // console.log(Datasetnames);
+  // console.log(FirstFunIndex);
 }
 
 // function getCol(matrix, col){
@@ -484,10 +485,10 @@ var barChart = tipSVG.selectAll("rect")
         if(maxwidth < (sigFigs((reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3)){
           maxwidth = sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3
         }
-        console.log("starts here");
-        console.log(reactor[chordindex][i]);
-        console.log(grouptotals[Datasetnames[i+1]]);
-        console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
+        // console.log("starts here");
+        // console.log(reactor[chordindex][i]);
+        // console.log(grouptotals[Datasetnames[i+1]]);
+        // console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
 
         return sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3;//d;
     })
@@ -937,10 +938,17 @@ Rad.selectAll("path").data(function (d,i) {console.log(d,i); S = d3.sum(reactor[
     }
 
     function click(d) {
+
       return eval(clickAction);
     }
 
     function clickGroup(d) {
+      if (d.index >= firstfunindex && firstfunindex!= null) {
+      // console.log("FirstFunIndex" + FirstFunIndex);
+      // console.log(d.index);
+        Shiny.setInputValue("foo",tooltipNames[d.index] )
+
+      }
         return eval(clickGroupAction)
     }
 
