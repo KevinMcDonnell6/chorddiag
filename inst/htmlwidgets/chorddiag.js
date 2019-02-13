@@ -66,12 +66,19 @@ HTMLWidgets.widget({
         reactor = options.reactor,
         grouptotals = options.grouptotals,
         firstfunindex = options.firstfunindex;
+console.log(typeof 0/0 == undefined);
+console.log(isNaN( 0/0));
 
         console.log(reactor);
         console.log(grouptotals);
-
+// console.log(firstfunindex);
+// var last_selection = null
+// console.log(typeof last_selection != "undefined");
     d3.select(el).selectAll("div.d3-tip").remove();
+    // $('div[class|="d3-tip"]').remove();
+    const elements = document.getElementsByClassName("d3-tip");
 
+    while (elements.length > 0) elements[0].remove();
     if (showTooltips) {
         var chordTip = d3.tip()
                          .attr('class', 'd3-tip')
@@ -124,6 +131,14 @@ HTMLWidgets.widget({
          var Matrixtotal = (d3.sum(Matrixsum) / 2 );
          // console.log(Matrixtotal);
 
+function checkforNaN(val){
+  if(isNaN(val)){return 0}
+  else {
+    return val
+  }
+}
+console.log(checkforNaN(0/0));
+console.log(checkforNaN(5));
          function newchordtip(d) {
              // indexes
              var i = d.source.index,
@@ -385,7 +400,7 @@ function getPercentage(d){
   var percentages = [];
 
   for(var i=2; i<Datasetnames.length; i++){
-          percentages.push(grouptotals[Datasetnames[i]][d.target.index - FirstFunIndex]);
+          percentages.push(checkforNaN(grouptotals[Datasetnames[i]][d.target.index - FirstFunIndex]));
     }
   return percentages
 };
@@ -419,7 +434,7 @@ if(reactor != null){
                         .attr("height", 35 * (Datasetnames.length-1));
 
 
-// console.log(d);
+// console.log("d",d);
 // console.log(Object.getOwnPropertyNames(grouptotals));
 // console.log(grouptotals[Datasetnames[1]]);
 // console.log(reactor );
@@ -427,7 +442,7 @@ if(reactor != null){
 // console.log(grouptotals[Datasetnames[1]][d.target.index - FirstFunIndex]);
 // console.log(grouptotals.Day1R1[d.target.index - FirstFunIndex]);
 // console.log(grouptotals.Day1R2[d.target.index - FirstFunIndex]);
-// // console.log(reactor[i][0]);
+// console.log(reactor[i][0]);
 // console.log(reactor[i][0]/grouptotals.Day1R1[d.target.index - FirstFunIndex]);
                   // tipSVG.append("text")
                   //     .text(newchordtip(d))
@@ -482,15 +497,17 @@ var barChart = tipSVG.selectAll("rect")
     // .duration(1000)
     .attr("width", function(d,i) {
         // console.log(d,i);
-        if(maxwidth < (sigFigs((reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3)){
-          maxwidth = sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3
+        if(maxwidth < (sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3)){
+          maxwidth = sigFigs((checkforNaN( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3
         }
-        // console.log("starts here");
-        // console.log(reactor[chordindex][i]);
-        // console.log(grouptotals[Datasetnames[i+1]]);
-        // console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
+        console.log("starts here");
+        console.log(reactor[chordindex][i]);
+        console.log(grouptotals[Datasetnames[i+1]]);
+        console.log(chordselected.target.index - FirstFunIndex);
+        console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
+        console.log(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
 
-        return sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3;//d;
+        return sigFigs(( checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3;//d;
     })
     .attr("transform", function (d, i) {
          var translate = [0,barWidth * i];
@@ -501,11 +518,11 @@ var barChart = tipSVG.selectAll("rect")
         .data(dataset)
         .enter()
         .append("text")
-        .text(function(d,i){console.log(sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2) + "%");
-          return sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2) + "%";})
+        .text(function(d,i){//console.log(sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2) + "%");
+          return sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2) + "%";})
         .attr('fill', 'white')
         .attr("x", function(d,i) {
-            return maxTitleWidth + 30 + sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex])*100,2)*3;//110 - d
+            return maxTitleWidth + 30 + sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3;//110 - d
         })
         .attr("y", function(d,i){return 40 + i*15})//barWidth - barPadding)
         .attr("transform", function (d, i) {
@@ -673,7 +690,7 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
             .attr("id", function(d) { return d.label; });
     }
 
-console.log(reactor!=null);
+// console.log(reactor!=null);
 //////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 dta = chord.groups();
@@ -946,8 +963,9 @@ Rad.selectAll("path").data(function (d,i) {console.log(d,i); S = d3.sum(reactor[
       if (d.index >= firstfunindex && firstfunindex!= null) {
       // console.log("FirstFunIndex" + FirstFunIndex);
       // console.log(d.index);
-        Shiny.setInputValue("foo",tooltipNames[d.index] )
-
+      var last_selection = d.index
+        Shiny.setInputValue("groupSelection",tooltipNames[d.index], {priority: "event"} )
+console.log(last_selection);
       }
         return eval(clickGroupAction)
     }

@@ -14,12 +14,13 @@ chorddiag(data, type = "directional", width = NULL, height = NULL,
   groupThickness = 0.1, groupPadding = 2, groupnamePadding = 30,
   groupnameFontsize = 18, groupedgeColor = NULL,
   chordedgeColor = "#808080", categoryNames = NULL,
-  categorynamePadding = 100, categorynameFontsize = 28, showTicks = TRUE,
-  tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
-  showTooltips = TRUE, showZeroTooltips = TRUE, tooltipNames = NULL,
-  tooltipUnit = NULL, tooltipFontsize = 12,
+  categorynamePadding = 100, categorynameFontsize = 28,
+  showTicks = TRUE, tickInterval = NULL, ticklabelFontsize = 10,
+  fadeLevel = 0.1, showTooltips = TRUE, showZeroTooltips = TRUE,
+  tooltipNames = NULL, tooltipUnit = NULL, tooltipFontsize = 12,
   tooltipGroupConnector = " &#x25B6; ", precision = NULL,
-  clickAction = NULL, clickGroupAction = NULL)
+  clickAction = NULL, clickGroupAction = NULL, reactor = NULL,
+  grouptotals = NULL, firstfunindex = NULL)
 }
 \arguments{
 \item{data}{A matrix containing the data. Must be square for the
@@ -120,6 +121,12 @@ purpose of filtering the data on other visualizations}
 
 \item{clickGroupAction}{character string containing JavaScript code to be executed
 on a mouse click so that shiny can get the groupIndex}
+
+\item{reactor}{array of arrays indicating the presence/absence of chord in reactor}
+
+\item{grouptotals}{totals of the groups for the individual datasets}
+
+\item{firstfunidex}{Index of the first function}
 }
 \description{
 Create an interactive chord diagram using the JavaScript visualization
