@@ -27,10 +27,10 @@ HTMLWidgets.widget({
 
     // save params for reference from resize method
     chord.params = params;
-    // console.log(chord.params)
+
     var matrix = params.matrix,
         options = params.options;
-    // console.log(matrix);
+
     // get width and height, calculate min for use in diagram size
     var width = el.offsetWidth,
         height = el.offsetHeight,
@@ -66,19 +66,12 @@ HTMLWidgets.widget({
         reactor = options.reactor,
         grouptotals = options.grouptotals,
         firstfunindex = options.firstfunindex;
-console.log(typeof 0/0 == undefined);
-console.log(isNaN( 0/0));
 
-        console.log(reactor);
-        console.log(grouptotals);
-// console.log(firstfunindex);
-// var last_selection = null
-// console.log(typeof last_selection != "undefined");
     d3.select(el).selectAll("div.d3-tip").remove();
     // $('div[class|="d3-tip"]').remove();
     const elements = document.getElementsByClassName("d3-tip");
-
     while (elements.length > 0) elements[0].remove();
+
     if (showTooltips) {
         var chordTip = d3.tip()
                          .attr('class', 'd3-tip')
@@ -129,16 +122,14 @@ console.log(isNaN( 0/0));
                          });
 
          var Matrixtotal = (d3.sum(Matrixsum) / 2 );
-         // console.log(Matrixtotal);
 
-function checkforNaN(val){
-  if(isNaN(val)){return 0}
-  else {
-    return val
-  }
-}
-console.log(checkforNaN(0/0));
-console.log(checkforNaN(5));
+         function checkforNaN(val){
+            if(isNaN(val)){return 0}
+            else {
+              return val
+            }
+          }
+
          function newchordtip(d) {
              // indexes
              var i = d.source.index,
@@ -184,7 +175,7 @@ console.log(checkforNaN(5));
     var fillScale = d3.scale.ordinal()
                             .domain(d3.range(matrix.length))
                             .range(groupColors);
-// console.log(groupColors);
+
     // calculate horizontal and vertical translation values
     var xTranslate = Math.max(width / 2, outerRadius + margin),
         yTranslate = Math.max(height / 2, outerRadius + margin);
@@ -214,17 +205,6 @@ console.log(checkforNaN(5));
                          // .style("left", (d3.event.pageX - 34) + "px")
                          // .style("top", (d3.event.pageY - 12) + "px");
 
-    //  var tipSVG = d3.select("#tipDiv")
-    //                         .append("svg")
-    //                         .attr("width", 500)
-    //                         .attr("height", 120);
-    // // console.log(tipSVG);
-    //                   tipSVG.append("text")
-    //                       .text("newchordtip(d)")
-    //                       .attr("x", 10)
-    //                       .attr("y", 20)
-    //                       .style('fill', 'white')
-    //                       .style("font-size", "20px");
 
 
 
@@ -234,30 +214,6 @@ console.log(checkforNaN(5));
            .call(div);
      }
 
-    // var div = d3.tip()//svg.append("g")
-    //     .attr("class", "d3-tip")
-    //     .style("opacity", 1e-6);
-  //
-  // function mouseover() {
-  //   div.style("opacity", 1);
-  // }
-  //
-  // // where the tooltip previosly contained an image
-  // function mousemove() {
-  //   div
-  //    .html("<h1>Bar Graph</h1><br> <svg class='chart'></svg>")
-  //       .style("left", (d3.event.pageX - 34) + "px")
-  //       .style("top", (d3.event.pageY - 12) + "px");
-  // }
-  //
-  // function mouseout() {
-  //   div.style("opacity", 1e-6);
-  // }
-
-// console.log(reactor);
-
-  // var reactor = [[11,60,22,6,16,5,6,16,14],[46,55,81,17,24,29,37,24,13],[1,6,3,0,4,0,4,6,2],[0,1,2,0,18,0,0,1,0],[9,11,9,1,5,2,8,16,1],[4,6,2,0,4,2,4,3,1],[21,13,17,18,11,28,8,12,1],[1,8,4,1,3,0,3,6,2],[22,13,6,2,8,2,3,4,3],[16,13,10,3,13,2,13,7,4],[23,44,36,8,18,15,16,22,7],[8,9,8,5,1,4,3,0,1],[4,8,3,2,5,2,4,2,1],[5,7,8,1,2,5,2,3,0],[4,6,2,1,4,2,1,2,3],[86,229,116,18,149,49,43,96,22],[17,40,17,8,14,7,16,16,5],[23,39,14,7,34,3,13,25,5],[18,19,16,5,9,3,13,7,1],[110,222,159,34,115,48,68,73,35],[6,13,9,3,4,0,2,2,1],[6,40,13,5,27,2,17,5,3],[3,4,7,0,4,2,1,2,2],[3,3,2,2,5,5,2,13,1],[38,65,50,13,30,14,17,16,20],[18,29,20,2,20,12,14,19,5],[7,28,12,5,15,15,1,16,0],[1,5,3,1,2,4,1,8,0],[2,0,3,0,0,12,0,21,2],[43,62,38,14,34,34,22,29,5]]
-  // ;
 
     // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
@@ -319,14 +275,14 @@ console.log(checkforNaN(5));
              .style("font-size", ticklabelFontsize + "px")
              .style("font-family", "sans-serif")
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
-             .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
+             .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
              .text(function(d) { return d.label; });
 
 ////////////////////////////////////////////////////////////////////////////////////#/
 ///////////////////////////////////////////////////////////////////////////////////
 
 // TICKS 2.0
-// console.log(chord.groups());
+
 var ticks2 = svg.append("g").attr("class", "ticks")
                .selectAll("g")
                .data(chord.groups)
@@ -354,7 +310,7 @@ ticks2.append("line")
 ticks2.append("text")
      .attr("x", 0)
      .attr("dy", ".35em")
-     .style("font-size", ticklabelFontsize + "px")
+     .style("font-size", 10 + "px")
      .style("font-family", "sans-serif")
      .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
      .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
@@ -372,30 +328,15 @@ ticks2.append("text")
                                + "-" + groupNames[d.target.index];
                     })
                     .attr("d", d3.svg.chord().radius(innerRadius));
-    // console.log(chord.chords());
 
+
+// If grouptotals is defined create variables for names of datasets and first index thats a function
 if(grouptotals != null){
   var Datasetnames = Object.getOwnPropertyNames(grouptotals);
   var FirstFunIndex = matrix[0].length - grouptotals.N.length;
-  // console.log(Datasetnames);
-  // console.log(FirstFunIndex);
+
 }
 
-// function getCol(matrix, col){
-//        var column = [];
-//        for(var i=0; i<matrix.length; i++){
-//           column.push(matrix[i][col]);
-//        }
-//        return column;
-//         };
-// function getRow(matrix,rowid){
-//   var row = [];
-//        for(var i=0; i<matrix[0].length; i++){
-//           row.push(matrix[i][col]);
-//        }
-//        return column;
-//     }
-// }
 function getPercentage(d){
   var percentages = [];
 
@@ -405,8 +346,7 @@ function getPercentage(d){
   return percentages
 };
   var color = d3.scale.category20();
-// console.log(grouptotals.NG.length);
-// console.log(matrix[0].length);
+
     // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
           .style("stroke", chordedgeColor)
@@ -417,13 +357,12 @@ function getPercentage(d){
               // if (showTooltips) chordTip.show(d);
               // if (showTooltips)
               var chordindex = i;
-              // console.log(chordindex);
+
               var chordselected = d;
               div.show(d);
-              // console.log(d,i);
-              // console.log(reactor[i]);
-              // console.log(newchordtip(d));
 
+
+// If reactor defined, create bar chart displaying percentages from each dataset
 if(reactor != null){
 
                 var maxwidth = 0
@@ -434,30 +373,7 @@ if(reactor != null){
                         .attr("height", 35 * (Datasetnames.length-1));
 
 
-// console.log("d",d);
-// console.log(Object.getOwnPropertyNames(grouptotals));
-// console.log(grouptotals[Datasetnames[1]]);
-// console.log(reactor );
-// console.log(reactor[i]);
-// console.log(grouptotals[Datasetnames[1]][d.target.index - FirstFunIndex]);
-// console.log(grouptotals.Day1R1[d.target.index - FirstFunIndex]);
-// console.log(grouptotals.Day1R2[d.target.index - FirstFunIndex]);
-// console.log(reactor[i][0]);
-// console.log(reactor[i][0]/grouptotals.Day1R1[d.target.index - FirstFunIndex]);
-                  // tipSVG.append("text")
-                  //     .text(newchordtip(d))
-                  //     .attr("x", 10)
-                  //     .attr("y", 20)
-                  //     .style('fill', 'white')
-                  //     .style("font-size", "20px");
 
-                  // var bars = svg.selectAll(".bar")
-                  //                   .data(data)
-                  //                   .enter()
-                  //                   .append("svg");
-
-// console.log(getPercentage(d));
-// console.log(d3.max(reactor[i]));
 var dataset = getPercentage(d);
 var barPadding = 5;
 var barWidth = 20;//(svgWidth / dataset.length);
@@ -496,18 +412,19 @@ var barChart = tipSVG.selectAll("rect")
     // .transition()
     // .duration(1000)
     .attr("width", function(d,i) {
-        // console.log(d,i);
-        if(maxwidth < (sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3)){
-          maxwidth = sigFigs((checkforNaN( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3
+        if(maxwidth < (sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*2)){
+          maxwidth = sigFigs((checkforNaN( reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*2
         }
-        console.log("starts here");
-        console.log(reactor[chordindex][i]);
-        console.log(grouptotals[Datasetnames[i+1]]);
-        console.log(chordselected.target.index - FirstFunIndex);
-        console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
-        console.log(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
+        // console.log(reactor);
+        // console.log(grouptotals);
+        // console.log("starts here");
+        // console.log(reactor[chordindex][i]);
+        // console.log(grouptotals[Datasetnames[i+1]]);
+        // console.log(chordselected.target.index - FirstFunIndex);
+        // console.log(grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
+        // console.log(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]);
 
-        return sigFigs(( checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3;//d;
+        return sigFigs(( checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*2;//d;
     })
     .attr("transform", function (d, i) {
          var translate = [0,barWidth * i];
@@ -522,7 +439,7 @@ var barChart = tipSVG.selectAll("rect")
           return sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2) + "%";})
         .attr('fill', 'white')
         .attr("x", function(d,i) {
-            return maxTitleWidth + 30 + sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*3;//110 - d
+            return maxTitleWidth + 30 + sigFigs((checkforNaN(reactor[chordindex][i]/grouptotals[Datasetnames[i+1]][chordselected.target.index - FirstFunIndex]))*100,2)*2;//110 - d
         })
         .attr("y", function(d,i){return 40 + i*15})//barWidth - barPadding)
         .attr("transform", function (d, i) {
@@ -534,106 +451,8 @@ var barChart = tipSVG.selectAll("rect")
 
 
 tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
-// console.log(sigFigs(( reactor[chordindex][i]/grouptotals[Datasetnames[1]][chordselected.target.index - FirstFunIndex])*100,2) + "%");
-
-
-    // tipSVG.append("text")
-    //         .text(function(d,i,j){return Datasetnames[i+1]})
-    //         .attr("x", 10)
-    //         .attr("y", function(d,i){return 10 + i*10})
-    //         .attr('fill', 'white')
-    //         .style('fill', 'white')
-    //         .style("font-size", "14px")
-    //         .attr("transform", function (d, i) {
-    //              var translate = [0,barWidth * i];
-    //              return "translate("+ translate +")";
-    //         });
-
-//                   tipSVG.append("rect")
-//                       .attr("fill", "aqua")
-//                       .attr("x", 100)
-//                       .attr("y", 30)
-//                       .attr("width", 0)
-//                       .attr("height", 30)
-//                       .transition()
-//                       .duration(1000)
-//                       .attr("width", sigFigs(( reactor[i][0]/grouptotals.Day1R1[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][0] * 4);
-//
-//                   tipSVG.append("rect")
-//                       .attr("fill", "magenta")
-//                       .attr("x", 100)
-//                       .attr("y", 70)
-//                       .attr("width", 0)
-//                       .attr("height", 30)
-//                       .transition()
-//                       .duration(1000)
-//                       .attr("width", sigFigs(( reactor[i][1]/grouptotals.Day1R2[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][1] * 4);
-//
-//                   // tipSVG.append("rect")
-//                   //     .attr("fill", "green")
-//                   //     .attr("y", 90)
-//                   //     .attr("width", 0)
-//                   //     .attr("height", 30)
-//                   //     .transition()
-//                   //     .duration(1000)
-//                   //     .attr("width", reactor[d.index][3] * 6);
-//
-//                   tipSVG.append("text")
-//                       .text("Grass")
-//                       .attr("x", 10)
-//                       .attr("y", 50)
-//                       .style('fill', 'white')
-//                       .style("font-size", "14px");
-//
-//
-//                   tipSVG.append("text")
-//                       .text("Leachate")
-//                       .attr("x", 10)
-//                       .attr("y", 90)
-//                       .style('fill', 'white')
-//                       .style("font-size", "14px");
-//
-//                   tipSVG.append("text")
-//                       .text(sigFigs(( reactor[i][0]/grouptotals.Day1R1[d.target.index - FirstFunIndex])*100,2) + "%")
-//                       .attr("x", 120)
-//                       .attr("y", 50)
-//                       .style('fill', 'white')
-//                       .transition()
-//                       .duration(1000)
-//                       .attr("x", 106 + sigFigs(( reactor[i][0]/grouptotals.Day1R1[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][0] * 4);
-//
-//                 tipSVG.append("text")
-//                     .text(sigFigs(( reactor[i][1]/grouptotals.Day1R2[d.target.index - FirstFunIndex])*100,2) + "%") //reactor[i][1])
-//                     .attr("x", 120)
-//                     .attr("y", 90)
-//                     .style('fill', 'white')
-//                     .transition()
-//                     .duration(1000)
-//                     .attr("x", 106 + sigFigs(( reactor[i][1]/grouptotals.Day1R2[d.target.index - FirstFunIndex])*100,2)*5);//reactor[i][1] * 4);
 };
-                //
-                // tipSVG.append("text")
-                //     .text(reactor[d.index][3])
-                //     .attr("x", 10)
-                //     .attr("y", 110)
-                //     .transition()
-                //     .duration(1000)
-                //     .attr("x", 6 + reactor[d.index][3] * 6);
 
-              // var barchart = d3.select("#tipDiv")
-              //       .data(reactor[i])
-              //       .enter()
-              //       .append("rect")
-              //       .attr("y",function(d,i){
-              //         // console.log(d,i);
-              //         return i*20 + 100
-              //       })
-              //       .attr("x",120)
-              //       .attr("height",30)
-              //       .attr("width", function(d,i){
-              //         // console.log(d);
-              //         d*5})
-              //       .attr("fill", "white");
 
               return chordFade(d, fadeLevel);
           })
@@ -644,18 +463,7 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
           .on("click", click);
 
 
-    // function getCol(matrix, col){
-    //        var column = [];
-    //        for(var i=0; i<matrix.length; i++){
-    //           column.push(matrix[i][col]);
-    //        }
-    //        return column;
-    //         };
-    //
-    //         console.log(d3.sum(matrix));
 
-
-// console.log(groupNames.findIndex(x => x=="Translation"));
     // create group labels
     if (showGroupnames) {
         var names = svg.append("g").attr("class", "names")
@@ -690,15 +498,10 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
             .attr("id", function(d) { return d.label; });
     }
 
-// console.log(reactor!=null);
 //////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 dta = chord.groups();
-// console.log(dta[0].startAngle);
-// console.log(dta.length);
 
-dta2 = chord.chords();
-// console.log(dta2);
 
 
 
@@ -719,16 +522,14 @@ eangles= [];
 
     var pie = d3.layout.pie()
         // .sortValues(function(a, b) { return a - b; });
-        .startAngle(function(d,i){//console.log(d);
+        .startAngle(function(d,i){
           return sangles[i]})
-        .endAngle(function(d,i){//console.log(d);
+        .endAngle(function(d,i){
           return eangles[i]});
 
 var arc4 = d3.svg.arc();
 
 
-
-        // console.log(dataset);
 
 function getCol(matrix, col){
        var column = [];
@@ -748,19 +549,17 @@ dict[i]=getCol(matrix,i)};
 
 
           var gs = svg.selectAll("ga").data(dict).enter().append("svg:g").attr("class","donuts");
-          // console.log(dict);
-          // console.log(d3.values(dict));
 
-          gs.selectAll("path").data(function (d,i) {//console.log(d,i);
+          gs.selectAll("path").data(function (d,i) {
             return pie(d,i); })
                   // .attr("startAngle", chord.groups()[5].startAngle)
                   .enter().append("path")
-                  .attr("fill", function (d, i,j) {//console.log(d,i,j);
+                  .attr("fill", function (d, i,j) {
                      return fillScale(i)})// color(i); })
                   .attr("stroke", "00000")
                   .style("stroke-width", "0.5px")
                   .attr("d", function (d, i, j) {
-                    // console.log(d,i,j);
+
                       return arc4.innerRadius(outerRadius+30).outerRadius(outerRadius+35)(d);
                   });
 
@@ -819,7 +618,7 @@ dict[i]=getCol(matrix,i)};
     }
 
     function groupTicks2(d) {
-      // console.log(d);
+
       var k = (d.endAngle - d.startAngle); // 100;
       // return d3.range(0, 101, d.value < 5 ? 101 : (d.value <10 ? 100 : (d.value < 40 ? 50 : (d.value < 80 ? 20 : 10)))).map(function(v,i){
       return d3.range(0,101, k < 0.05 ? 101 : (k < 0.1 ? 100 : (k < 0.15 ? 50 : ( k < 0.4 ? 20 : 10)))).map(function(v,i){
@@ -876,11 +675,10 @@ dict[i]=getCol(matrix,i)};
 
     function clickGroup(d) {
       if (d.index >= firstfunindex && firstfunindex!= null) {
-      // console.log("FirstFunIndex" + FirstFunIndex);
-      // console.log(d.index);
-      var last_selection = d.index
         Shiny.setInputValue("groupSelection",tooltipNames[d.index], {priority: "event"} )
-console.log(last_selection);
+      }
+      if (d.index < firstfunindex && firstfunindex!= null) {
+        Shiny.setInputValue("grouptaxaSelection",tooltipNames[d.index], {priority: "event"} )
       }
         return eval(clickGroupAction)
     }
