@@ -449,7 +449,6 @@ var barChart = tipSVG.selectAll("rect")
 
 
 
-
 tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
 };
 
@@ -463,7 +462,54 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
           .on("click", click);
 
 
+          //////////////////////////// Text Wrap //////////////////////////// now unused
 
+                  var x = d3.scale.ordinal()
+                      .rangeRoundBands([0, 100], .1, .3);
+
+            function wrap(text, width) {
+                                text.each(function() {
+
+                                  var text = d3.select(this),
+                                      words = text.text().split(/\s+/).reverse(),
+                                      word,
+                                      line = [],
+                                      lineNumber = 0,
+                                      lineHeight = 1.1, // ems
+                                      y = text.attr("y"),
+                                      dy = parseFloat(text.attr("dy")),
+                                      tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+                                  while (word = words.pop()) {
+                                    line.push(word);
+                                    tspan.text(line.join(" "));
+                                    if (tspan.node().getComputedTextLength() > width) {
+                                      line.pop();
+                                      tspan.text(line.join(" "));
+                                      line = [word];
+                                      tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word)//.attr("transform", function(d) {
+                                          // return "rotate(" + (++lineNumber * 2 * 180 / Math.PI - 90) + ")";})
+                                    }
+                                  }
+                                });
+                              }
+
+          ///////////////////////////////////////////////////////////////////////////
+
+          ////////////////////////truncate text /////////////////////////////
+          text_truncate = function(str, length, ending) {
+                                      if (length == null) {
+                                        length = 100;
+                                      }
+                                      if (ending == null) {
+                                        ending = '...';
+                                      }
+                                      if (str.length > length) {
+                                        return str.substring(0, length - ending.length) + ending;
+                                      } else {
+                                        return str;
+                                      }
+                                    };
+          ////////////////////////////////////////////////////////////////////
     // create group labels
     if (showGroupnames) {
         var names = svg.append("g").attr("class", "names")
@@ -481,10 +527,12 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
                        .enter().append("g").attr("id", function(d,i) {
                            return "label-" + d.label;
                        })
+                       .attr("class","name")
                        .attr("transform", function(d) {
                            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
                                 + "translate(" + (outerRadius + 60 + d.padding) + ", 0)";
                        });
+
         names.append("text")
             .attr("x", 0)
             .attr("dy", ".35em")
@@ -494,8 +542,16 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
                 return d.handside == "left" ? "rotate(180)" : null;
             })
             .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
-            .text(function(d,i) { return d.label }) //+ d3.sum(getCol(matrix,groupNames.findIndex(x => x==d.label))) ; })
+            .text(function(d,i) {
+               return text_truncate(d.label,30)
+               // return d.label;
+             }) //+ d3.sum(getCol(matrix,groupNames.findIndex(x => x==d.label))) ; })
             .attr("id", function(d) { return d.label; });
+
+
+        // svg.selectAll(".name text")
+              // .call(wrap,x.rangeBand());
+      // console.log(wrap("this is a very long sentence that i want to see what happens to it",20));
     }
 
 //////////////////////////////////////////////////////////////////////
