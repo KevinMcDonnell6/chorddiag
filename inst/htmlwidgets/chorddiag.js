@@ -103,18 +103,6 @@ HTMLWidgets.widget({
                              }
                          });
 
-        var groupTip = d3.tip()
-                         .attr('class', 'd3-tip')
-                         .style("font-size", 20 + "px")
-                         .style("font-family", "sans-serif")
-                         .direction('mt')
-                         .offset([10, 10])
-                         .html(function(d) {
-                             var value = sigFigs(d.value, precision);
-                             return tooltipNames[d.index] + " (total): " + value + tooltipUnit;
-                         });
-
-
          var Matrixsum = matrix.map(function(y){
                              return y.reduce(function(a,b){
                                  return a+b;
@@ -129,6 +117,20 @@ HTMLWidgets.widget({
               return val
             }
           }
+
+        var groupTip = d3.tip()
+                         .attr('class', 'd3-tip')
+                         .style("font-size", 20 + "px")
+                         .style("font-family", "sans-serif")
+                         .direction('mt')
+                         .offset([10, 10])
+                         .html(function(d) {
+                             var value = sigFigs(d.value, precision);
+                             return tooltipNames[d.index] + " (total): " + value + tooltipUnit +" ("+sigFigs(value*100/Matrixtotal,2)+"%)";
+                         });
+
+
+
 
          function newchordtip(d) {
              // indexes
@@ -484,10 +486,10 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
                                     tspan.text(line.join(" "));
                                     if (tspan.node().getComputedTextLength() > width) {
                                       line.pop();
-                                      tspan.text(line.join(" "));
+                                      tspan.text(line.join(" ")).attr("dy",function(d){return(dy-((1+lineNumber)*.6) +"em")});
                                       line = [word];
-                                      tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word)//.attr("transform", function(d) {
-                                          // return "rotate(" + (++lineNumber * 2 * 180 / Math.PI - 90) + ")";})
+                                      tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", (++lineNumber * lineHeight) - 0.4*lineNumber + dy + "em").text(word)//.attr("transform", function(d) {
+                                          // return "rotate(" + (++lineNumber * 200 * 180 / Math.PI - 90) + ")";})
                                     }
                                   }
                                 });
@@ -543,10 +545,14 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
             })
             .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
             .text(function(d,i) {
-               return text_truncate(d.label,30)
-               // return d.label;
+               // return text_truncate(d.label,30)
+               return d.label;
              }) //+ d3.sum(getCol(matrix,groupNames.findIndex(x => x==d.label))) ; })
             .attr("id", function(d) { return d.label; });
+            // .attr("transform", function(d) {
+            //     return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+            //          + "translate(" + (outerRadius + 60 + d.padding) + ", 0)";
+            // });
 
 
         // svg.selectAll(".name text")
@@ -665,10 +671,10 @@ dict[i]=getCol(matrix,i)};
     // returns an array of tick angles and labels, given a group
     function groupTicks(d) {
       var k = (d.endAngle - d.startAngle) / d.value;
-      return d3.range(0, d.value, tickInterval).map(function(v, i) {
+      return d3.range(0, d.value+1, tickInterval).map(function(v, i) {
         return {
           angle: v * k + d.startAngle,
-          label: i % 5 ? null : v
+          label: i % 5 ? null : v//tickInterval == 1 ? (i % 2 ? null : v) : (i % 5 ? null : v)
         };
       });
     }
@@ -677,7 +683,7 @@ dict[i]=getCol(matrix,i)};
 
       var k = (d.endAngle - d.startAngle); // 100;
       // return d3.range(0, 101, d.value < 5 ? 101 : (d.value <10 ? 100 : (d.value < 40 ? 50 : (d.value < 80 ? 20 : 10)))).map(function(v,i){
-      return d3.range(0,101, k < 0.05 ? 101 : (k < 0.1 ? 100 : (k < 0.15 ? 50 : ( k < 0.4 ? 20 : 10)))).map(function(v,i){
+      return d3.range(0,101, k < 0.05 ? 101 : (k < 0.1 ? 100 : (k < 0.25 ? 50 : ( k < 0.5 ? 20 : 10)))).map(function(v,i){
         return {
           angle: v * k/100 + d.startAngle,
           label:  Math.round(v)
