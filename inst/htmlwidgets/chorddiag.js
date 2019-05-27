@@ -339,6 +339,36 @@ if(grouptotals != null){
 
 }
 
+
+var short_names = {
+ "Translation, ribosomal structure and biogenesis" : "Translation",
+ "RNA processing and modification" : "RNA processing",
+ "Transcription" : "Transcription",
+ "Replication, recombination and repair" : "Replication",
+ "Chromatin structure and dynamics" : "Chromatin",
+ "Cell cycle control, cell division, chromosome partitioning" : "Cell Cycle",
+ "Nuclear structure" :"Nuclear structure",
+ "Defense mechanisms": "Defense",
+ "Signal transduction mechanisms" : "Signal transduction",
+ "Cell wall/membrane/envelope biogenesis" : "Cell wall",
+ "Cell motility":"Cell motility",
+ "Cytoskeleton":"Cytoskeleton",
+"Extracellular structures" :"Extracellular",
+ "Intracellular trafficking, secretion, and vesicular transport" : "Intracellular trafficking",
+ "Posttranslational modification, protein turnover, chaperones": "Posttranslational modification",
+ "Mobilome: prophages, transposons" : "Mobilome",
+ "Energy production and conversion" : "Energy",
+ "Carbohydrate transport and metabolism" : "Carbohydrate",
+ "Amino acid transport and metabolism" : "Amino acid",
+ "Nucleotide transport and metabolism": "Nucleotide",
+ "Coenzyme transport and metabolism" : "Coenzyme",
+"Lipid transport and metabolism" : "Lipid",
+ "Inorganic ion transport and metabolism" : "Inorganic ion",
+"Secondary metabolites biosynthesis, transport and catabolism" : "Secondary metabolism",
+ "General function prediction only": "General function",
+ "Function unknown": "Function unknown"}
+
+
 function getPercentage(d){
   var percentages = [];
 
@@ -546,7 +576,12 @@ tipSVG.attr("width", maxwidth+ maxTitleWidth + 80);
             .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
             .text(function(d,i) {
                // return text_truncate(d.label,30)
-               return d.label;
+               // return d.label;
+               if (short_names.hasOwnProperty(d.label)){
+               return(short_names[d.label])}
+               else {
+                 return(d.label)
+               }
              }) //+ d3.sum(getCol(matrix,groupNames.findIndex(x => x==d.label))) ; })
             .attr("id", function(d) { return d.label; });
             // .attr("transform", function(d) {
@@ -627,7 +662,6 @@ dict[i]=getCol(matrix,i)};
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-
 
 
 //////////////////////////////////////////////////////////////////////////////
