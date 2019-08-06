@@ -658,6 +658,15 @@ dict[i]=getCol(matrix,i)};
                   .attr("d", function (d, i, j) {
 
                       return arc4.innerRadius(outerRadius+30).outerRadius(outerRadius+35)(d);
+                  })
+                  .on("mouseover",function(d,i,j){
+                    return groupFade2(j,fadeLevel)
+                  })
+                  .on("mouseout",function(d,i,j){
+                    return groupFade2(j,1)
+                  })
+                  .on("click",function(d,i,j){
+                    return clickGroup2(j)
                   });
 
 //////////////////////////////////////////////////////////////////////////////
@@ -744,7 +753,13 @@ dict[i]=getCol(matrix,i)};
             .transition()
             .style("opacity", opacity);
     }
-
+    function groupFade2(i, opacity) {
+        svg.selectAll(".chords path")
+            .filter(function(d) { return d.source.index != i
+                                      && d.target.index != i; })
+            .transition()
+            .style("opacity", opacity);
+    }
     // returns an event handler for fading all chords except for the one
     // given
     function chordFade(g, opacity) {
@@ -775,6 +790,16 @@ dict[i]=getCol(matrix,i)};
       }
       if (d.index < firstfunindex && firstfunindex!= null) {
         Shiny.setInputValue("grouptaxaSelection",tooltipNames[d.index], {priority: "event"} )
+      }
+        return eval(clickGroupAction)
+    }
+
+    function clickGroup2(i) {
+      if (i >= firstfunindex && firstfunindex!= null) {
+        Shiny.setInputValue("groupSelection",tooltipNames[i], {priority: "event"} )
+      }
+      if (i < firstfunindex && firstfunindex!= null) {
+        Shiny.setInputValue("grouptaxaSelection",tooltipNames[i], {priority: "event"} )
       }
         return eval(clickGroupAction)
     }
