@@ -270,6 +270,8 @@ HTMLWidgets.widget({
              .attr("y2", 0)
              .style("stroke", "#000");
 
+var maxTickLabelWidth = 0
+
         // add tick labels
         ticks.append("text")
              .attr("x", 0)
@@ -278,7 +280,12 @@ HTMLWidgets.widget({
              .style("font-family", "sans-serif")
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
              .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
-             .text(function(d) { return d.label; });
+             .text(function(d) {return d.label; })
+             .attr("placeholder",function(d){
+               if (this.getComputedTextLength() > maxTickLabelWidth) {
+                 maxTickLabelWidth = this.getComputedTextLength()
+               }
+               });
 
 ////////////////////////////////////////////////////////////////////////////////////#/
 ///////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +304,7 @@ var ticks2 = svg.append("g").attr("class", "ticks")
                .enter().append("g").attr("class", "tick")
                .attr("transform", function(d) {
                    return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                       + "translate(" + (outerRadius + 30) + ", 0)";
+                       + "translate(" + (outerRadius + 14 +maxTickLabelWidth) + ", 0)";
                });
 
 // add tick marks
@@ -657,7 +664,7 @@ dict[i]=getCol(matrix,i)};
                   .style("stroke-width", "0.5px")
                   .attr("d", function (d, i, j) {
 
-                      return arc4.innerRadius(outerRadius+30).outerRadius(outerRadius+35)(d);
+                      return arc4.innerRadius(outerRadius+10+maxTickLabelWidth).outerRadius(outerRadius+15+maxTickLabelWidth)(d);
                   })
                   .on("mouseover",function(d,i,j){
                     return groupFade2(j,fadeLevel)
