@@ -792,23 +792,28 @@ dict[i]=getCol(matrix,i)};
     }
 
     function clickGroup(d) {
-      if (d.index >= firstfunindex && firstfunindex!= null) {
-        Shiny.setInputValue("groupSelection",tooltipNames[d.index], {priority: "event"} )
-      }
-      if (d.index < firstfunindex && firstfunindex!= null) {
-        Shiny.setInputValue("grouptaxaSelection",tooltipNames[d.index], {priority: "event"} )
-      }
-        return eval(clickGroupAction)
+        if(clickGroupAction != "static"){
+            if (d.index >= firstfunindex && firstfunindex!= null) {
+            Shiny.setInputValue("groupSelection",tooltipNames[d.index], {priority: "event"} )
+          }
+          if (d.index < firstfunindex && firstfunindex!= null) {
+            Shiny.setInputValue("grouptaxaSelection",tooltipNames[d.index], {priority: "event"} )
+          }
+            return eval(clickGroupAction)
+        }
+
     }
 
     function clickGroup2(i) {
-      if (i >= firstfunindex && firstfunindex!= null) {
-        Shiny.setInputValue("groupSelection",tooltipNames[i], {priority: "event"} )
-      }
-      if (i < firstfunindex && firstfunindex!= null) {
-        Shiny.setInputValue("grouptaxaSelection",tooltipNames[i], {priority: "event"} )
-      }
-        return eval(clickGroupAction)
+        if(clickGroupAction != "static"){
+          if (i >= firstfunindex && firstfunindex!= null) {
+            Shiny.setInputValue("groupSelection",tooltipNames[i], {priority: "event"} )
+          }
+          if (i < firstfunindex && firstfunindex!= null) {
+            Shiny.setInputValue("grouptaxaSelection",tooltipNames[i], {priority: "event"} )
+          }
+            return eval(clickGroupAction)
+        }
     }
 
   }  // end renderValue function
